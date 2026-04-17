@@ -2,7 +2,7 @@ const spreadsheetParent = SpreadsheetApp.getActiveSpreadsheet();
 SpreadsheetApp.setActiveSheet(spreadsheetParent.getSheets()[1]);
 const spreadsheet = SpreadsheetApp.getActiveSheet();
 
-const zoomRoomID = "...";
+const zoomRoomID = "..."
 const zoomReminder = "..."
 
 const StaffCalendarID = "..."
@@ -76,13 +76,28 @@ function clearCalendar(eventCal) {
 
 }
 
+/* 
+function dailyChatReminder() {
+  var message = [];
+  message = eventJSON(1);
+  if (message.length > 0 ) {
+    sendMessage(
+      "Meetings/Events today!", 
+      "https://fonts.gstatic.com/s/i/short-term/release/googlesymbols/today/default/24px.svg",
+      message);
+  } else {
+    
+  }
+}
+*/
+
 function dailyChatReminderFiltered() {
   const windowSize=1
   messageStaff = eventJSONFiltered(windowSize,["Staff","Public"]);
   messageDirector = eventJSONFiltered(windowSize,["Director"]);
   
   if (messageStaff.length > 0 ) {
-    sendMessage(
+    sendMessageTo(
       "Meetings/Events today!", 
       "https://fonts.gstatic.com/s/i/short-term/release/googlesymbols/today/default/24px.svg",
       messageStaff,StaffChatURL,StaffCalShareURL);
@@ -90,7 +105,7 @@ function dailyChatReminderFiltered() {
     
   }
   if (messageDirector.length > 0 ) {
-    sendMessage(
+    sendMessageTo(
       "Director Meetings/Events today!", 
       "https://fonts.gstatic.com/s/i/short-term/release/googlesymbols/today/default/24px.svg",
       messageDirector,DirectorChatURL,DirectorCalShareURL);
@@ -98,6 +113,40 @@ function dailyChatReminderFiltered() {
     
   }
 }
+
+/*
+function weeklyChatReminder() {
+  const windowSize=28
+  const today=new Date();
+  const later=new Date(today.getFullYear(), today.getMonth(), today.getDate() + windowSize);
+  var message = [];
+  const titleOptions = {
+    month: "short",
+    day: "2-digit",
+  };
+  message = eventJSON(windowSize);
+  if (message.length > 0 ) {
+    // everything is fine
+  } else {
+    message.push({
+          header: "<b>No events in selected range</b>",
+          // collapsible: true,
+          widgets: [
+            { textParagraph: {
+              maxLines: 3,
+              text: 
+                "Either the calendar is broken or it's a dry month."
+              }
+            }
+          ]
+      });
+  }
+  sendMessage(
+      "Upcoming Meetings/Events" + " — " + new Intl.DateTimeFormat("en-US", titleOptions).format(today) + " to " + new Intl.DateTimeFormat("en-US", titleOptions).format(later), 
+      "https://fonts.gstatic.com/s/i/short-term/release/googlesymbols/calendar_month/default/24px.svg",
+      message);
+}
+*/
 
 function weeklyChatReminderFiltered() {
   const windowSize=28
@@ -156,6 +205,7 @@ function weeklyChatReminderFiltered() {
 
 }
 
+/*
 function eventJSON(windowSize) {
   const today=new Date();
   const later=new Date(today.getFullYear(), today.getMonth(), today.getDate() + windowSize);
@@ -206,6 +256,7 @@ function eventJSON(windowSize) {
   }
   return message;
 }
+*/
 
 function eventJSONFiltered(windowSize,filter) {
   const today=new Date();
@@ -257,6 +308,67 @@ function eventJSONFiltered(windowSize,filter) {
   }
   return message;
 }
+
+/*
+function sendMessage(title, image, inner_payload) {
+
+  const payload = {
+  "cardsV2":[
+    {
+      "card":{
+        "header":{
+          "title" :title,
+          "imageUrl": image
+        },
+        "sections": inner_payload
+      }
+    }
+  ],
+  "accessoryWidgets":[
+    {
+      "buttonList":{
+        "buttons":[
+          {
+            "text":"Full Schedule",
+            "icon":{
+              "materialIcon":{
+                "name":"link"
+              }
+            },
+            "onClick":{
+              "openLink":{
+                "url":"..."
+              }
+            }
+          },{
+            "text":"Add to Calendar",
+            "icon":{
+              "materialIcon":{
+                "name":"link"
+              }
+            },
+            "onClick":{
+              "openLink":{
+                "url":"..."
+              }
+            }
+          },
+        ]
+      }
+    }
+  ]
+};
+
+    const options = {
+        method: 'POST',
+        contentType: 'application/json',
+        payload: JSON.stringify(payload),
+        muteHttpExceptions: true,
+    };
+    response=UrlFetchApp.fetch(StaffChatURL, options);
+    console.log(response.toString());
+}
+*/
 
 function sendMessageTo(title, image, inner_payload, target, calendarURL) {
 
