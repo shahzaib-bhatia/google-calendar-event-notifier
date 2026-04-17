@@ -258,65 +258,6 @@ function eventJSONFiltered(windowSize,filter) {
   return message;
 }
 
-function sendMessage(title, image, inner_payload) {
-
-  const payload = {
-  "cardsV2":[
-    {
-      "card":{
-        "header":{
-          "title" :title,
-          "imageUrl": image
-        },
-        "sections": inner_payload
-      }
-    }
-  ],
-  "accessoryWidgets":[
-    {
-      "buttonList":{
-        "buttons":[
-          {
-            "text":"Full Schedule",
-            "icon":{
-              "materialIcon":{
-                "name":"link"
-              }
-            },
-            "onClick":{
-              "openLink":{
-                "url":"https://docs.google.com/spreadsheets/d/e/2PACX-1vQNA7TEag60kyrmrRqU4kngv_68QxmQiTvW3ejiO1rvkuleqTJhAaYO80ebJWBiYwCAShqrm7JA0SoH/pubhtml?gid=0&single=true"
-              }
-            }
-          },{
-            "text":"Add to Calendar",
-            "icon":{
-              "materialIcon":{
-                "name":"link"
-              }
-            },
-            "onClick":{
-              "openLink":{
-                "url":"https://calendar.google.com/calendar/u/1?cid=bmFrYS1rb24uY29tX2hqYm5kMXVtNWoxNmQ2cTYyMGNuamI4Z2RnQGdyb3VwLmNhbGVuZGFyLmdvb2dsZS5jb20"
-              }
-            }
-          },
-        ]
-      }
-    }
-  ]
-};
-
-    const options = {
-        method: 'POST',
-        contentType: 'application/json',
-        payload: JSON.stringify(payload),
-        muteHttpExceptions: true,
-    };
-    response=UrlFetchApp.fetch(StaffChatURL, options);
-    console.log(response.toString());
-}
-
 function sendMessageTo(title, image, inner_payload, target, calendarURL) {
 
   const payload = {
@@ -344,7 +285,7 @@ function sendMessageTo(title, image, inner_payload, target, calendarURL) {
             },
             "onClick":{
               "openLink":{
-                "url":"https://docs.google.com/spreadsheets/d/e/2PACX-1vQNA7TEag60kyrmrRqU4kngv_68QxmQiTvW3ejiO1rvkuleqTJhAaYO80ebJWBiYwCAShqrm7JA0SoH/pubhtml?gid=0&single=true"
+                "url":"..."
               }
             }
           },{
