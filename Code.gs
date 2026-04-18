@@ -2,21 +2,25 @@ const spreadsheetParent = SpreadsheetApp.getActiveSpreadsheet();
 SpreadsheetApp.setActiveSheet(spreadsheetParent.getSheets()[1]);
 const spreadsheet = SpreadsheetApp.getActiveSheet();
 
-const zoomRoomID = "..."
-const zoomReminder = "..."
+const zoomRoomID = "...";
+const zoomReminder = "...";
 
-const StaffCalendarID = "..."
-const DirectorCalendarID = "..."
+const StaffCalendarID = "...";
+const DirectorCalendarID = "...";
 
-const StaffCalShareURL = "..."
-const DirectorCalShareURL = "..."
+const StaffCalShareURL = "...";
+const DirectorCalShareURL = "...";
+const EventListURL = "..."
 
-const StaffChatURL = "..."
-const DirectorChatURL = "..."
+const StaffChatURL = "...";
+const DirectorChatURL = "...";
 
-const StaffEventCal = CalendarApp.getCalendarById(StaffCalendarID);
-const DirectorEventCal = CalendarApp.getCalendarById(DirectorCalendarID);
-const meetings = spreadsheet.getRange("A2:M").getValues();
+
+/* 
+const meetingRange = spreadsheet.getRange("A2:M");
+meetingRange.sort(6);
+const meetings = meetingRange.getValues();
+*/
 
 function onOpen() {
   const ui = SpreadsheetApp.getUi();
@@ -25,22 +29,32 @@ function onOpen() {
       .addToUi();
 }
 
+function getMeetings() {
+  const meetingRange = spreadsheet.getRange("A2:M");
+  meetingRange.sort(6);
+  return meetingRange.getValues();
+}
+
 function updateCalendar() {
+  const meetings = getMeetings();
+  const StaffEventCal = CalendarApp.getCalendarById(StaffCalendarID);
+  const DirectorEventCal = CalendarApp.getCalendarById(DirectorCalendarID);
+
   clearCalendar(StaffEventCal);
   clearCalendar(DirectorEventCal);
   for (x=0; x<meetings.length; x++) {
     var meeting = meetings[x];
-      if (meeting [0] && meeting[5] && meeting[6]) { 
-        var title = meeting[0];
-        var start = meeting[5];
-        var end = meeting[6];
-        var location = meeting[8];
-        var description = meeting[9];
-        var audience = meeting[10];
-        var zoom = meeting[11];
-        var notify = meeting[12];
+    if (meeting [0] && meeting[5] && meeting[6]) { 
+      var title = meeting[0];
+      var start = meeting[5];
+      var end = meeting[6];
+      var location = meeting[8];
+      var description = meeting[9];
+      var audience = meeting[10];
+      var zoom = meeting[11];
+      var notify = meeting[12];
 
-        Logger.log("Adding " + (x + 1) + " / " + meetings.length + " - " + title + " Start: " + start + " End: " + end + " Location: " + location + " Description: " + description);
+      Logger.log("Adding " + (x + 1) + " / " + meetings.length + " - " + title + " Start: " + start + " End: " + end + " Location: " + location + " Description: " + description);
 
       if ( audience == "Director") {
           addEvent(DirectorEventCal,title,start,end,location,description,zoom,notify);
@@ -58,7 +72,7 @@ function addEvent(calendar,title,start,end,location,description,zoom,notify) {
   if ( zoom == "Yes" ) { event.addGuest(zoomRoomID) };
   if ( notify == "Yes" ) { event.addPopupReminder(30) };
   Logger.log("OK! Created: " + event.getId() );
-  Utilities.sleep(250); // Api limit
+  Utilities.sleep(100); // Api limit
 }
 
 function clearCalendar(eventCal) {
@@ -71,7 +85,7 @@ function clearCalendar(eventCal) {
     var event = events[x];
     Logger.log("Removing event " + ( x + 1 ) + " / " + events.length + " " + event.getId() )
     event.deleteEvent();
-    Utilities.sleep(250) // Api limit
+    Utilities.sleep(100) // Api limit
   }
 
 }
@@ -259,6 +273,7 @@ function eventJSON(windowSize) {
 */
 
 function eventJSONFiltered(windowSize,filter) {
+  const meetings = getMeetings();
   const today=new Date();
   const later=new Date(today.getFullYear(), today.getMonth(), today.getDate() + windowSize);
   const message = [];
@@ -337,7 +352,7 @@ function sendMessage(title, image, inner_payload) {
             },
             "onClick":{
               "openLink":{
-                "url":"..."
+                "url": EventListURL
               }
             }
           },{
@@ -397,7 +412,7 @@ function sendMessageTo(title, image, inner_payload, target, calendarURL) {
             },
             "onClick":{
               "openLink":{
-                "url":"..."
+                "url": EventListURL
               }
             }
           },{
